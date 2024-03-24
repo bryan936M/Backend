@@ -16,8 +16,10 @@ import injectPublishToExchange from "./middlewares/publish.middleware.js";
 import { consumeMessage } from "./utils/Broker/rabbitMQ.js";
 import { service } from "./api/v1/controllers/product.controller.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
+import rateLimiter from "./middlewares/rateLimiting.middleware.js";
 import apiV1Router from "./api/v1/routes/index.js";
 import { BadRequestError } from "./utils/ErrorHandling/App-errors.js";
+import { redisConnect } from "./utils/Redis/index.js";
 
 dotenv.config();
 
@@ -32,6 +34,10 @@ amqConnect().then(async (c) => {
   await consumeMessage(channel, service);
 });
 
+redisConnect().then((client) => {
+  return client;
+});
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -42,6 +48,8 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use(rateLimiter());
 
 app.use(
   session({

@@ -32,6 +32,7 @@ export default {
     EXCHANGE: process.env.EXCHANGE || 'Microservices',
     ORDER_SERVICE: process.env.ORDER_SERVICE || 'order-service',
     USER_SERVICE: process.env.USER_SERVICE || 'user-service',
+    REDIS_URI: process.env.REDIS_URI || 'redis://localhost:6379',
     database: {
         connectionString: process.env.DEV_DATABASE_URL || `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@mongo:${process.env.MONGODB_LOCAL_PORT}/${process.env.SERVICE}-db?authSource=admin`
 }};
